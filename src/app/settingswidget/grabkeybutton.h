@@ -22,8 +22,8 @@ private:
     void grabAll();
     void releaseAll();
     void onClick();
-    void keyPressEvent (QKeyEvent *) override;
-    void keyReleaseEvent ( QKeyEvent* ) override;
+    void keyPressEvent(QKeyEvent *) override;
+    void keyReleaseEvent(QKeyEvent*) override;
 
 signals:
     void keyCombinationPressed(int);

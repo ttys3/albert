@@ -1,8 +1,7 @@
-cmake_minimum_required(VERSION 3.1.3)  # Least supporting CMAKE_CXX_STANDARD
+cmake_minimum_required(VERSION 3.14.7)  # Least supporting empty endif
 ###############################################################################
 
 project(albert VERSION 0.16.3)
-
 ###############################################################################
 
 include(GNUInstallDirs)
@@ -37,11 +36,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 ###############################################################################
 
-add_subdirectory(lib/globalshortcut)
+#add_subdirectory(lib/qhotkey)
+#add_subdirectory(lib/globalshortcut)
 add_subdirectory(lib/xdg)
 add_subdirectory(plugins/)
 
-###############################################################################
+#################################### Lib  #####################################
 
 set(TARGET_NAME_LIB ${PROJECT_NAME}-lib)
 
@@ -78,21 +78,16 @@ target_link_libraries(${TARGET_NAME_LIB}
         Qt5::Sql
 )
 
-###############################################################################
 
-option(BUILD_WITH_QTCHARTS "Use QtCharts to plot stats." ON)
-
-find_package(Qt5 5.5.0
-    COMPONENTS
-        Concurrent
-        Network
-        Sql
-        Widgets
-        X11Extras
-    OPTIONAL_COMPONENTS
-        Charts
+install(TARGETS ${TARGET_NAME_LIB} ${TARGET_NAME_BIN}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/albert
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+
+#################################### App  #####################################
+
+option(BUILD_WITH_QTCHARTS "Use QtCharts to plot stats." ON)
 set(TARGET_NAME_BIN ${PROJECT_NAME}-bin)
 
 file(GLOB_RECURSE BIN_SRC src/app/*)
@@ -109,9 +104,20 @@ set_target_properties(${TARGET_NAME_BIN} PROPERTIES
 )
 
 target_include_directories(${TARGET_NAME_BIN} PRIVATE src/app src/app/settingswidget)
+
 if (DEFINED CMAKE_LIBRARY_ARCHITECTURE)
     target_compile_definitions(${TARGET_NAME_BIN} PRIVATE -DMULTIARCH_TUPLE="${CMAKE_LIBRARY_ARCHITECTURE}")
 endif()
+
+find_package(Qt5 5.5.0
+    COMPONENTS
+        Concurrent
+        Network
+        Sql
+        Widgets
+    OPTIONAL_COMPONENTS
+        Charts
+)
 
 target_link_libraries(${TARGET_NAME_BIN}
     PRIVATE
@@ -119,9 +125,8 @@ target_link_libraries(${TARGET_NAME_BIN}
         Qt5::Network
         Qt5::Sql
         Qt5::Widgets
-        Qt5::X11Extras
         albert::lib
-        globalshortcut
+        #globalshortcut
         xdg
 )
 if(BUILD_WITH_QTCHARTS)
@@ -129,16 +134,31 @@ if(BUILD_WITH_QTCHARTS)
     target_compile_definitions(${TARGET_NAME_BIN} PRIVATE -DBUILD_WITH_QTCHARTS) #export branch
 endif()
 
-###############################################################################
 
 install(TARGETS ${TARGET_NAME_LIB} ${TARGET_NAME_BIN}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/albert
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# Do platform specific post target stuff
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    # Install desktop entry and icon
+
+######################### Platform specific stuff #############################
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+
+    # Discriminate display server type
+    set(DISPLAY_SERVER "x11" CACHE STRING "Linux display server to build against (wayland or x11)." FORCE)
+    if(${DISPLAY_SERVER} MATCHES "x11")
+        find_package(Qt5 5.5.0 COMPONENTS X11Extras)
+        target_link_libraries(${TARGET_NAME_BIN} PRIVATE Qt5::X11Extras)
+    elseif(${DISPLAY_SERVER} MATCHES "wayland")
+    else()
+        message( FATAL_ERROR "Invalid display server specified: ${DISPLAY_SERVER}" )
+    endif()
+
+   # Install desktop entry and icon
    install(FILES resources/albert.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications )
    install(FILES resources/icons/albert.svg DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+endif()
+

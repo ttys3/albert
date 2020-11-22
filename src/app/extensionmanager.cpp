@@ -174,7 +174,6 @@ const std::set<Core::QueryHandler*> &Core::ExtensionManager::queryHandlers() {
 void Core::ExtensionManager::registerFallbackProvider(Core::FallbackProvider *fallbackProvider) {
     d->fallbackProviders_.insert(fallbackProvider);
     emit fallbackProviderRegistered(fallbackProvider);
-
 }
 
 

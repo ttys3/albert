@@ -24,7 +24,7 @@
 #endif
 #include <csignal>
 #include <functional>
-#include "globalshortcut/hotkeymanager.h"
+//#include "globalshortcut/hotkeymanager.h"
 #include "xdg/iconlookup.h"
 #include "extensionmanager.h"
 #include "albert/frontend.h"
@@ -323,7 +323,7 @@ int main(int argc, char **argv) {
                     pluginDirs.push_back(fileInfo.canonicalFilePath());
             }
 #elif defined __APPLE__
-        throw "Not implemented";
+        //throw "Not implemented";
 #elif defined _WIN32
         throw "Not implemented";
 #endif
@@ -333,20 +333,21 @@ int main(int argc, char **argv) {
         extensionManager = new ExtensionManager(pluginDirs);
         extensionManager->reloadExtensions();
 
-        if ( !QGuiApplication::platformName().contains("wayland") )
-            hotkeyManager = new HotkeyManager;
+//        if ( !QGuiApplication::platformName().contains("wayland") )
+//            hotkeyManager = new HotkeyManager;
 
-        if ( hotkeyManager ) {
-            if ( parser.isSet("hotkey") ) {
-                QString hotkey = parser.value("hotkey");
-                if ( !hotkeyManager->registerHotkey(hotkey) )
-                    qFatal("Failed to set hotkey to %s.", hotkey.toLocal8Bit().constData());
-            } else if ( settings.contains("hotkey") ) {
-                QString hotkey = settings.value("hotkey").toString();
-                if ( !hotkeyManager->registerHotkey(hotkey) )
-                    qFatal("Failed to set hotkey to %s.", hotkey.toLocal8Bit().constData());
-            }
-        }
+//        if ( hotkeyManager ) {
+//            if ( parser.isSet("hotkey") ) {
+//                QString hotkey = parser.value("hotkey");
+//                if ( !hotkeyManager->registerHotkey(hotkey) )
+//                    qFatal("Failed to set hotkey to %s.", hotkey.toLocal8Bit().constData());
+//            } else if ( settings.contains("hotkey") ) {
+//                QString hotkey = settings.value("hotkey").toString();
+//                if ( !hotkeyManager->registerHotkey(hotkey) )
+//                    qFatal("Failed to set hotkey to %s.", hotkey.toLocal8Bit().constData());
+//            }
+//        }
+
         queryManager = new QueryManager(extensionManager);
         telemetry  = new Telemetry;
         trayIcon = new TrayIcon;
@@ -441,8 +442,8 @@ int main(int argc, char **argv) {
         // Define a lambda that connects a new frontend
         auto connectFrontend = [&](Frontend *f){
 
-            QObject::connect(hotkeyManager, &HotkeyManager::hotKeyPressed,
-                             f, &Frontend::toggleVisibility);
+//            QObject::connect(hotkeyManager, &HotkeyManager::hotKeyPressed,
+//                             f, &Frontend::toggleVisibility);
 
             QObject::connect(queryManager, &QueryManager::resultsReady,
                              f, &Frontend::setModel);
@@ -487,6 +488,7 @@ int main(int argc, char **argv) {
      */
 
     qDebug() << "Entering eventloop";
+    settingsWidget->show();
     int retval = app->exec();
 
 
@@ -499,7 +501,7 @@ int main(int argc, char **argv) {
     delete trayIconMenu;
     delete trayIcon;
     delete queryManager;
-    delete hotkeyManager;
+    //delete hotkeyManager;
     delete extensionManager;
     delete frontendManager;
 

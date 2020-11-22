@@ -3,7 +3,6 @@
 #include <QDebug>
 #include "albert/item.h"
 #include "albert/query.h"
-#include "matchcompare.h"
 
 
 /** ***************************************************************************/

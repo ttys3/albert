@@ -40,27 +40,27 @@ public:
      */
     virtual QWidget* widget(QWidget *parent = nullptr) = 0;
 
-protected:
+//protected:
 
-    /**
-     * @brief registerFallbackProvider
-     */
-    void registerQueryHandler(QueryHandler*);
+//    /**
+//     * @brief registerFallbackProvider
+//     */
+//    void registerQueryHandler(QueryHandler*);
 
-    /**
-     * @brief unregisterFallbackProvider
-     */
-    void unregisterQueryHandler(QueryHandler*);
+//    /**
+//     * @brief unregisterFallbackProvider
+//     */
+//    void unregisterQueryHandler(QueryHandler*);
 
-    /**
-     * @brief registerFallbackProvider
-     */
-    void registerFallbackProvider(FallbackProvider*);
+//    /**
+//     * @brief registerFallbackProvider
+//     */
+//    void registerFallbackProvider(FallbackProvider*);
 
-    /**
-     * @brief unregisterFallbackProvider
-     */
-    void unregisterFallbackProvider(FallbackProvider*);
+//    /**
+//     * @brief unregisterFallbackProvider
+//     */
+//    void unregisterFallbackProvider(FallbackProvider*);
 
 private:
 

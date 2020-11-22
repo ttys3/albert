@@ -32,9 +32,9 @@ public:
 private:
 
     void keyPressEvent(QKeyEvent * event) override;
-    void closeEvent(QCloseEvent * event) override;
+//    void closeEvent(QCloseEvent * event) override;
     void onPluginDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
-    void changeHotkey(int);
+//    void changeHotkey(int);
     void updatePluginInformations(const QModelIndex & curr);
 
     ExtensionManager *extensionManager_;
