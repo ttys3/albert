@@ -32,8 +32,8 @@ public:
 Core::ExtensionManager::ExtensionManager(QStringList pluginDirs)
     : d(new ExtensionManagerPrivate) {
 
-    Q_ASSERT( Extension::extensionManager == nullptr);
-    Extension::extensionManager = this;
+    //Q_ASSERT( Extension::extensionManager == nullptr);
+    //Extension::extensionManager = this;
 
     // Find plugins
     for ( const QString &pluginDir : pluginDirs ) {

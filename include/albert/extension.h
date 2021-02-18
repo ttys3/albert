@@ -23,7 +23,7 @@ class EXPORT_CORE Extension : public Plugin
 public:
 
     Extension(const QString &id);
-    ~Extension();
+    virtual ~Extension();
 
     /**
      * @brief A human readable name of the plugin
@@ -66,8 +66,8 @@ private:
 
     std::unique_ptr<Private> d;
 
-    static ExtensionManager *extensionManager;
-    friend class ExtensionManager;
+    //static ExtensionManager *extensionManager;
+    //friend class ExtensionManager;
 
 };
 

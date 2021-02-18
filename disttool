@@ -67,7 +67,7 @@ def release(args):
             file.write(f"""---
 layout: page
 title:  "Albert v{args.version} released"
-date: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M%z")}
+date: {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M +0000")}
 ---
 
 {changelog.strip()}
